@@ -1,0 +1,70 @@
+{
+  "pluginAlias": "Tempo",
+  "pluginType": "platform",
+  "singular": true,
+  "headerDisplay": "Configurez les jours Tempo et personnalisez les noms des accessoires.",
+  "schema": {
+    "jourRougeEnabled": {
+      "title": "Jour Rouge",
+      "type": "boolean",
+      "default": true
+    },
+    "jourRougeName": {
+      "title": "Nom de l'accessoire (Jour Rouge)",
+      "type": "string",
+      "default": "J Rouge"
+    },
+    "jourBlancEnabled": {
+      "title": "Jour Blanc",
+      "type": "boolean",
+      "default": true
+    },
+    "jourBlancName": {
+      "title": "Nom de l'accessoire (Jour Blanc)",
+      "type": "string",
+      "default": "J Blanc"
+    },
+    "jourBleuEnabled": {
+      "title": "Jour Bleu",
+      "type": "boolean",
+      "default": true
+    },
+    "jourBleuName": {
+      "title": "Nom de l'accessoire (Jour Bleu)",
+      "type": "string",
+      "default": "J Bleu"
+    }
+  },
+  "layout": [
+    {
+      "key": "jourRougeEnabled",
+      "type": "checkbox",
+      "label": "Activer le Jour Rouge"
+    },
+    {
+      "key": "jourRougeName",
+      "type": "string",
+      "label": "Nom de l'accessoire pour le Jour Rouge"
+    },
+    {
+      "key": "jourBleuEnabled",
+      "type": "checkbox",
+      "label": "Activer le Jour Bleu"
+    },
+    {
+      "key": "jourBleuName",
+      "type": "string",
+      "label": "Nom de l'accessoire pour le Jour Bleu"
+    },
+    {
+      "key": "jourBlancEnabled",
+      "type": "checkbox",
+      "label": "Activer le Jour Blanc"
+    },
+    {
+      "key": "jourBlancName",
+      "type": "string",
+      "label": "Nom de l'accessoire pour le Jour Blanc"
+    }
+  ]
+}
