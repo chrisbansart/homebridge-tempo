@@ -5,14 +5,15 @@
 
 Plugin Homebridge pour intégrer les couleurs journalières du service Tempo de RTE dans HomeKit sous forme de "Détecteurs de Contact". Permet de piloter sa consommation d'énergie et ses appareils connectés en fonction de la couleur du jour (tarif), en particulier durant les heures pleines des Jours rouges.
 
-Exemples dans l'app Maison ou depuis l'app EVE :
-Le détecteur Jour Rouge s'allume => Eteindre le chauffage de la chambre d'amis
-Le détecteur Jour Rouge s'allume et l'heure est > 6h du matin ( heures pleines ) => Eteindre le cumulus
+Exemples dans l'app Maison ou dans l'app EVE :
+
+- Le détecteur Jour Rouge s'allume et l'heure est > 6h du matin ( heures pleines ) => Eteindre le cumulus
+- Le détecteur Jour Rouge s'allume => Eteindre le chauffage de la chambre d'amis
 
 ## Fonctionnalités
 
 - Affiche la couleur du jour (Rouge, Blanc, ou Bleu) en tant que capteurs dans HomeKit.
-- Mise à jour automatique des données Tempo à partir de l'API officielle de RTE.
+- Mise à jour automatique des données Tempo à partir de l'url de RTE.
 - Personnalisation des noms des capteurs via la configuration.
 - Possibilité d'inclure ou pas certains capteurs (Rouge, Blanc, Bleu) via les réglages
 
@@ -36,14 +37,14 @@ Les options de configuration disponibles sont :
 ## Fonctionnement
 
 1. **Synchronisation avec l'API Tempo**  
-   Pour rappel la couleur du jour s'applique du 6h du matin au jour J jusqu'à 6h du matin J+1
+   Pour rappel la couleur du jour s'applique du 6h du matin jour J jusqu'à 6h du matin jour J+1
 
-   Le plugin récupère quotidiennement les données de l'API Tempo officielle pour déterminer la couleur du lendemain. Celle-ci est publiée J-1 à 7h du matin par RTE. Le plugin la récupère à J-1 11h du matin pour se laisser de la marche. Si la récupération échoue, le plugin réessaye 2h plus tard.
+   Le plugin récupère quotidiennement les données de l'API Tempo officielle pour déterminer la couleur du jour J et du lendemain. La couleur du lendemain est publiée J-1 à 7h du matin par RTE. Le plugin la récupère à J-1 11h du matin. Si la récupération échoue, le plugin réessaye 2h plus tard.
 
 2. **Mise à jour automatique**
 
    - Les données Tempo sont mises à jour à 11h tous les jours.
-   - Les capteurs sont actualisés à 6h du matin pour refléter la couleur du jour J. Le changement d'état des capteurs permet de déclencher les automatisations qui en tiennent compte.
+   - Les capteurs sont actualisés à 6h du matin pour refléter la nouvelle couleur du jour J. Le changement d'état des capteurs permet de déclencher les automatisations qui en tiennent compte.
 
 ## Ressources
 
@@ -58,4 +59,4 @@ Pour toute question ou problème, ouvrez une [issue](https://github.com/chrisban
 
 ## Licence
 
-MIT © 2024 [Christophe Bansart](https://github.com/chrisbansart)
+MIT © 2024 [Christophe Bansart - KDetude](https://github.com/chrisbansart)
