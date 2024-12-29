@@ -4,6 +4,13 @@
   "singular": true,
   "headerDisplay": "Configurez les jours Tempo et personnalisez les noms des accessoires.",
   "schema": {
+    "properties": {
+      "name": {
+        "title": "Tempo",
+        "type": "string",
+        "required": true
+      }
+    },
     "jourRougeEnabled": {
       "title": "Jour Rouge",
       "type": "boolean",
