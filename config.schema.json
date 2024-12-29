@@ -9,37 +9,37 @@
         "title": "Tempo",
         "type": "string",
         "required": true
+      },
+      "jourRougeEnabled": {
+        "title": "Jour Rouge",
+        "type": "boolean",
+        "default": true
+      },
+      "jourRougeName": {
+        "title": "Nom de l'accessoire (Jour Rouge)",
+        "type": "string",
+        "default": "J Rouge"
+      },
+      "jourBlancEnabled": {
+        "title": "Jour Blanc",
+        "type": "boolean",
+        "default": true
+      },
+      "jourBlancName": {
+        "title": "Nom de l'accessoire (Jour Blanc)",
+        "type": "string",
+        "default": "J Blanc"
+      },
+      "jourBleuEnabled": {
+        "title": "Jour Bleu",
+        "type": "boolean",
+        "default": true
+      },
+      "jourBleuName": {
+        "title": "Nom de l'accessoire (Jour Bleu)",
+        "type": "string",
+        "default": "J Bleu"
       }
-    },
-    "jourRougeEnabled": {
-      "title": "Jour Rouge",
-      "type": "boolean",
-      "default": true
-    },
-    "jourRougeName": {
-      "title": "Nom de l'accessoire (Jour Rouge)",
-      "type": "string",
-      "default": "J Rouge"
-    },
-    "jourBlancEnabled": {
-      "title": "Jour Blanc",
-      "type": "boolean",
-      "default": true
-    },
-    "jourBlancName": {
-      "title": "Nom de l'accessoire (Jour Blanc)",
-      "type": "string",
-      "default": "J Blanc"
-    },
-    "jourBleuEnabled": {
-      "title": "Jour Bleu",
-      "type": "boolean",
-      "default": true
-    },
-    "jourBleuName": {
-      "title": "Nom de l'accessoire (Jour Bleu)",
-      "type": "string",
-      "default": "J Bleu"
     }
   },
   "layout": [

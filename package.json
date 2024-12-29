@@ -1,6 +1,6 @@
 {
   "name": "homebridge-tempo",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "Un plugin pour les abonnés à la formule Tempo d'EDF - RTE. A Homebridge plugin for EDF Tempo (French electricity provider pricing plan named Tempo)",
   "main": "dist/dynamic-platform.js",
   "scripts": {
