@@ -1,6 +1,6 @@
 {
   "name": "homebridge-tempo",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "description": "Un plugin pour les abonnés à la formule Tempo d'EDF - RTE. A Homebridge plugin for EDF Tempo (French electricity provider pricing plan named Tempo)",
   "main": "dist/dynamic-platform.js",
   "scripts": {
@@ -12,16 +12,16 @@
   },
   "author": "Christophe Bansart <christophe.bansart@kdetude.com>",
   "homepage": "https://github.com/chrisbansart/",
- "funding": [
- {
-  "type" : "paypal",
-  "url" : "https://paypal.me/ChrisBansart"
-},
-  {
-    "type" : "patreon",
-    "url" : "https://www.patreon.com/bansart"
-  }
-],
+  "funding": [
+    {
+      "type": "paypal",
+      "url": "https://paypal.me/ChrisBansart"
+    },
+    {
+      "type": "patreon",
+      "url": "https://www.patreon.com/bansart"
+    }
+  ],
   "engines": {
     "node": ">=14.18.1",
     "homebridge": ">=1.3.5"
