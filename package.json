@@ -11,7 +11,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Christophe Bansart <christophe.bansart@kdetude.com>",
-  "homepage": "https://github.com/chrisbansart/",
+  "homepage": "https://github.com/chrisbansart/homebridge-tempo.git",
   "funding": [
     {
       "type": "paypal",
