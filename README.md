@@ -9,11 +9,11 @@ Plugin Homebridge pour intégrer les couleurs journalières du service Tempo de 
 Exemples dans l'app Maison ou dans l'app EVE :
 
 - Le détecteur Jour Rouge s'allume et l'heure est > 6h du matin ( heures pleines ) => Eteindre le cumulus
-- Le détecteur Jour Rouge s'allume => Eteindre le chauffage de la chambre d'amis
+- Le détecteur Jour Rouge s'allume => Eteindre le chauffage de la chambre d'amis et réduire le chauffage électrique des autres chambres jusqu'à 22h (jours rouges heures pleines)
 
 ## Fonctionnalités
 
-- Affiche la couleur du jour (Rouge, Blanc, ou Bleu) en tant que capteurs dans HomeKit.
+- Affiche la couleur du jour (Rouge, Blanc, ou Bleu) en tant que capteurs ("Détecteurs de contact") dans HomeKit.
 - Mise à jour automatique des données Tempo à partir de l'url de RTE.
 - Personnalisation des noms des capteurs via la configuration.
 - Possibilité d'inclure ou pas certains capteurs (Rouge, Blanc, Bleu) via les réglages
@@ -38,14 +38,15 @@ Les options de configuration disponibles sont :
 ## Fonctionnement
 
 1. **Synchronisation avec l'API Tempo**  
-   Pour rappel la couleur du jour s'applique du 6h du matin jour J jusqu'à 6h du matin jour J+1
+   Pour rappel, la couleur du jour s'applique de 6h du matin jour J jusqu'à 6h du matin jour J+1 et RTE publie la couleur du lendemain chaque jour à 7h du matin.
 
-   Le plugin récupère quotidiennement les données de l'API Tempo officielle pour déterminer la couleur du jour J et du lendemain. La couleur du lendemain est publiée J-1 à 7h du matin par RTE. Le plugin la récupère à J-1 11h du matin. Si la récupération échoue, le plugin réessaye 2h plus tard.
+   Le plugin homebridge-tempo récupère l'information depuis le site RTE sur la couleur du lendemain tous les jours à 11h du matin. Si la récupération échoue, le plugin réessaye 2h plus tard.
+
+   Au premier démarrage ou lors d'un redémarrage, le plugin récupère et met à jour les informations des couleurs du jour et du lendemain.
 
 2. **Mise à jour automatique**
 
-   - Les données Tempo sont mises à jour à 11h tous les jours.
-   - Les capteurs sont actualisés à 6h du matin pour refléter la nouvelle couleur du jour J. Le changement d'état des capteurs permet de déclencher les automatisations qui en tiennent compte.
+   - Les capteurs sont actualisés à 6h du matin pour refléter la nouvelle couleur du jour. Le changement d'état des capteurs permet de déclencher les automatisations qui en tiennent compte.
 
 ## Ressources
 
@@ -60,4 +61,4 @@ Pour toute question ou problème, ouvrez une [issue](https://github.com/chrisban
 
 ## Licence
 
-MIT © 2024 [Christophe Bansart - KDetude](https://github.com/chrisbansart)
+ICS © 2024 [Christophe Bansart - KDetude](https://github.com/chrisbansart)
