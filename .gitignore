@@ -2,3 +2,4 @@ dist/
 node_modules/
 .vscode/
 homebridge-tempo-*.tgz
+doc-perso.md
