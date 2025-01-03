@@ -25,7 +25,7 @@ Dans tous les cas lors du passage en heures creuses quelle que soit la couleur d
 
 Via le moteur de recherche de plugin de Homebridge
 ou
-`npm i homebridge-tempo`
+`npm i -g homebridge-tempo`
 
 ## Configuration du plugin
 
@@ -54,6 +54,7 @@ Le lendemain J+1 :
 - A 6h du matin, les détecteurs de contact HomeKit représentant les couleurs des jours s'activent ou se désactivent. Exemple : si le jour est rouge, le détecteur « jour rouge » s'active.
 
 etc.
+
 Cette stratégie de mise à jour des données évite d'avoir à solliciter à intervalles répétés le site Web EDF-RTE inutilement.
 
 NB :
