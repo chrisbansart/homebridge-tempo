@@ -191,12 +191,17 @@ class TempoPlatform implements DynamicPlatformPlugin {
     }
   }
 
+
+  
   private scheduleTempoDataUpdate(): void {
     const now = moment().tz('Europe/Paris');
-    const nextUpdate = moment().tz('Europe/Paris').startOf('day').add(11, 'hours');
-
+    let nextUpdate = moment().tz('Europe/Paris').startOf('day').add(12, 'hours'); // Midi du jour actuel
+    
     if (now.isAfter(nextUpdate)) {
-      nextUpdate.add(1, 'days');
+        // Si 12h est déjà passé, effectuer une mise à jour immédiatement
+        this.updateTempoData();
+        // Planifier la prochaine mise à jour à midi du lendemain
+        nextUpdate = moment().tz('Europe/Paris').startOf('day').add(1, 'days').add(12, 'hours');
     }
 
     const timeUntilNextUpdate = nextUpdate.diff(now);
@@ -208,10 +213,13 @@ class TempoPlatform implements DynamicPlatformPlugin {
 
   private scheduleTempoDayColorUpdate(): void {
     const now = moment().tz('Europe/Paris');
-    const nextUpdate = moment().tz('Europe/Paris').startOf('day').add(6, 'hours');
+    let nextUpdate = moment().tz('Europe/Paris').startOf('day').add(6, 'hours');
 
     if (now.isAfter(nextUpdate)) {
-      nextUpdate.add(1, 'days');
+      // Si 6h est déjà passé, effectuer une mise à jour immédiatement
+      this.updateTempoDayColor();
+      // Planifier la prochaine mise à jour à 6h du lendemain
+       nextUpdate = moment().tz('Europe/Paris').startOf('day').add(1, 'days').add(6, 'hours');
     }
 
     const timeUntilNextUpdate = nextUpdate.diff(now);
