@@ -8,7 +8,7 @@ Le Plugin Homebridge Tempo permet d'intégrer les couleurs journalières du serv
 
 Exemples d'automatisations dans l'app Maison pour limiter la consommation électrique les heures pleines des jours rouges :
 
-- Le détecteur Jour Rouge s'allume => Eteindre le cumulus & éteindre le chauffage de la chambre d'amis & Réduire le chauffage électrique des autres chambres & Arrêter la charge de la voiture électrique
+- Le détecteur Jour Rouge HP (Heures Pleines) s'allume => Eteindre le cumulus & éteindre le chauffage de la chambre d'amis & Réduire le chauffage électrique des autres chambres & Arrêter la charge de la voiture électrique
 
 Dans tous les cas lors du passage en heures creuses quelle que soit la couleur du jour :
 
@@ -16,10 +16,10 @@ Dans tous les cas lors du passage en heures creuses quelle que soit la couleur d
 
 ## Fonctionnalités
 
-- Affiche la couleur du jour (Rouge, Blanc, ou Bleu) en tant que capteurs ("Détecteurs de contact") dans HomeKit.
+- Affiche la couleur du jour (Rouge, Blanc, ou Bleu) et Heures Pleines / Heures Creuses en tant que capteurs ("Détecteurs de contact") dans HomeKit : 6 capteurs au total
 - Mise à jour automatique des données Tempo à partir du site web de EDF-RTE Tempo.
 - Personnalisation des noms des capteurs via la configuration.
-- Possibilité de sélectionner ou pas certains capteurs (Rouge, Blanc, Bleu) via les réglages
+- Possibilité de rendre visible ou pas certains capteurs (Rouge, Blanc, Bleu) dans "Maison"
 
 ## Installation
 
@@ -31,14 +31,14 @@ ou
 
 Les options de configuration disponibles sont :
 
-| Champ                              | Type    | Description                                           | Valeur par défaut |
-| ---------------------------------- | ------- | ----------------------------------------------------- | ----------------- |
-| `[ ] Jour Rouge`                   | Boolean | Active le capteur pour les jours rouges.              | `true`            |
-| `Nom de l'accessoire (Jour Rouge)` | String  | Nom personnalisé pour le capteur des jours rouges.    | `"J Rouge"`       |
-| `[ ] Jour Blanc`                   | Boolean | Active ou désactive le capteur pour les jours blancs. | `true`            |
-| `Nom de l'accessoire (Jour Blanc)` | String  | Nom personnalisé pour le capteur des jours blancs.    | `J Blanc`         |
-| `[ ] Jour Bleu`                    | Boolean | Active ou désactive le capteur pour les jours bleus.  | `true`            |
-| `Nom de l'accessoire (Jour Bleu)`  | String  | Nom personnalisé pour le capteur des jours bleus.     | `"J Bleu"`        |
+| Champ                                 | Description                                                                    | Valeur par défaut |
+| ------------------------------------- | ------------------------------------------------------------------------------ | ----------------- |
+| `[ ] Jour Rouge HC`                   | Rend visible dans HomeKit le capteur pour les jours rouges aux Heures Creuses. | `true`            |
+| `Nom de l'accessoire (Jour Rouge HC)` | Nom personnalisé pour le capteur des jours rouges Heures Creuses.              | `"J Rouge HC"`    |
+| `[ ] Jour Rouge HP`                   | Rend visible dans HomeKit le capteur pour les jours rouges aux Heures Pleines. | `true`            |
+| `Nom de l'accessoire (Jour Rouge HP)` | Nom personnalisé pour le capteur des jours rouges Heures Pleines.              | `"J Rouge HP"`    |
+
+etc pour les couleurs blanches et bleues
 
 ## Fonctionnement de la mise à jour des données du plugin Tempo\*\*
 
@@ -51,7 +51,8 @@ Jour J :
 
 Le lendemain J+1 :
 
-- A 6h du matin, les détecteurs de contact HomeKit représentant les couleurs des jours s'activent ou se désactivent. Exemple : si le jour est rouge, le détecteur « jour rouge » s'active.
+- A 6h (le moment ou la nouvelle couleur et tarification associée s'applique), les détecteurs de contact HomeKit représentant les couleurs des jours Heures Pleines s'activent ou se désactivent. Exemple : si le jour est rouge, le détecteur « Jour Rouge HP » s'active.
+- A 22h (le moment du passage en Heures creuses), les détecteurs de contact HomeKit HP de la couleur du jour HP se désactive et celui de la même couleur en HC s'active. Exemple : si le jour est rouge, le détecteur « Jour Rouge HP » se désactive et « Jour Rouge HC » s'active.
 
 etc.
 
