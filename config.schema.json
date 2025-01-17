@@ -3,6 +3,7 @@
   "pluginType": "platform",
   "singular": true,
   "headerDisplay": "Configurez les jours Tempo et personnalisez les noms des accessoires.",
+  "footerDisplay": "Created by @chrisbansart",
   "schema": {
     "properties": {
       "name": {
@@ -162,6 +163,10 @@
       "key": "jourBleuHCName",
       "type": "string",
       "label": "Nom de l'accessoire pour le Jour Bleu HC"
+    },
+    {
+      "type": "help",
+      "text": "=== Détecteurs pour couleurs des jours sans la distinction HC/HP ==="
     },
     {
       "key": "jourRougeEnabled",
