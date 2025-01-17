@@ -4,12 +4,12 @@ import moment from 'moment-timezone';
 
 const PLUGIN_NAME = 'homebridge-tempo';
 const PLATFORM_NAME = 'Tempo';
-
 interface TempoContext {
   colorCode: number;
   colorName: string;
-  isHC: boolean; // Ajout de la propriété isHC
+  isHC: boolean | null; // Permettre à isHC d'être null
 }
+
 class TempoPlatform implements DynamicPlatformPlugin {
   private readonly apiEndpoint = 'https://www.services-rte.com/cms/open_data/v1/tempo';
   private readonly accessories: Map<string, PlatformAccessory> = new Map();
@@ -44,64 +44,66 @@ class TempoPlatform implements DynamicPlatformPlugin {
     this.accessories.set(accessory.UUID, accessory);
   }
 
-  private initializeAccessories(): void {
-    const defaultConfig = [
+private initializeAccessories(): void {
+  const defaultConfig = [
     { colorCode: 3, colorName: this.config.jourRougeHPName || 'J Rouge HP', enabled: this.config.jourRougeHPEnabled !== false, isHC: false },
     { colorCode: 2, colorName: this.config.jourBlancHPName || 'J Blanc HP', enabled: this.config.jourBlancHPEnabled !== false, isHC: false },
     { colorCode: 1, colorName: this.config.jourBleuHPName || 'J Bleu HP', enabled: this.config.jourBleuHPEnabled !== false, isHC: false },
     { colorCode: 3, colorName: this.config.jourRougeHCName || 'J Rouge HC', enabled: this.config.jourRougeHCEnabled !== false, isHC: true },
     { colorCode: 2, colorName: this.config.jourBlancHCName || 'J Blanc HC', enabled: this.config.jourBlancHCEnabled !== false, isHC: true },
     { colorCode: 1, colorName: this.config.jourBleuHCName || 'J Bleu HC', enabled: this.config.jourBleuHCEnabled !== false, isHC: true },
+    { colorCode: 3, colorName: this.config.jourRougeName || 'J Rouge', enabled: this.config.jourRougeEnabled !== false, isHC: null },
+    { colorCode: 2, colorName: this.config.jourBlancName || 'J Blanc', enabled: this.config.jourBlancEnabled !== false, isHC: null },
+    { colorCode: 1, colorName: this.config.jourBleuName || 'J Bleu', enabled: this.config.jourBleuEnabled !== false, isHC: null },
   ];
 
-    // Remove any existing accessories that we no longer maintain
-    const existingAccessories = Array.from(this.accessories.values());
-    const keepAccessories = new Set<string>();
+  // Remove any existing accessories that we no longer maintain
+  const existingAccessories = Array.from(this.accessories.values());
+  const keepAccessories = new Set<string>();
 
-defaultConfig.forEach(data => {
-  if (!data.enabled) {
-    this.log.info(`Skipping disabled accessory: ${data.colorName}`);
-    return;
-  }
+  defaultConfig.forEach(data => {
+    if (!data.enabled) {
+      this.log.info(`Skipping disabled accessory: ${data.colorName}`);
+      return;
+    }
 
-  // Utiliser les anciens UUID pour HP et de nouveaux pour HC
-  const uuid = data.isHC 
-    ? this.api.hap.uuid.generate(`tempo-${data.colorCode}-HC`) 
-    : this.api.hap.uuid.generate(`tempo-${data.colorCode}`); // Ancien UUID sans HC
+   // Si null jour HP ou HC sinon soit HC soit HP
+    const uuid = data.isHC !== null
+      ? this.api.hap.uuid.generate(`tempo-${data.colorCode}-${data.isHC ? 'HC' : 'HP'}`)
+      : this.api.hap.uuid.generate(`tempo-${data.colorCode}`);
 
-  keepAccessories.add(uuid);
+    keepAccessories.add(uuid);
 
-  let accessory = this.accessories.get(uuid);
+    let accessory = this.accessories.get(uuid);
 
-  if (!accessory) {
-    // Créer un nouvel accessoire
-    this.log.info(`Adding new accessory: ${data.colorName}`);
-    accessory = new this.api.platformAccessory(data.colorName, uuid);
-    this.setupAccessoryServices(accessory, data);
-    this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
-    this.accessories.set(uuid, accessory);
-  } else {
-    // Mettre à jour l'accessoire existant
-    this.log.info(`Updating existing accessory: ${data.colorName}`);
-    this.setupAccessoryServices(accessory, data);
-  }
-});
+    if (!accessory) {
+      // Créer un nouvel accessoire
+      this.log.info(`Adding new accessory: ${data.colorName}`);
+      accessory = new this.api.platformAccessory(data.colorName, uuid);
+      this.setupAccessoryServices(accessory, data);
+      this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+      this.accessories.set(uuid, accessory);
+    } else {
+      // Mettre à jour l'accessoire existant
+      this.log.info(`Updating existing accessory: ${data.colorName}`);
+      this.setupAccessoryServices(accessory, data);
+    }
+  });
 
+  // Remove unused accessories
+  existingAccessories
+    .filter(accessory => !keepAccessories.has(accessory.UUID))
+    .forEach(accessory => {
+      this.log.info(`Removing unused accessory: ${accessory.displayName}`);
+      this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+      this.accessories.delete(accessory.UUID);
+    });
+}
 
-
-    // Remove unused accessories
-    existingAccessories
-      .filter(accessory => !keepAccessories.has(accessory.UUID))
-      .forEach(accessory => {
-        this.log.info(`Removing unused accessory: ${accessory.displayName}`);
-        this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
-        this.accessories.delete(accessory.UUID);
-      });
-  }
 
 private setupAccessoryServices(accessory: PlatformAccessory, data: TempoContext): void {
   const { colorCode, colorName, isHC } = data;
-  const serviceSuffix = isHC ? 'HC' : 'HP';
+  const serviceSuffix = isHC !== null ? (isHC ? 'HC' : 'HP') : '';
 
   const informationService = accessory.getService(this.api.hap.Service.AccessoryInformation) ||
     accessory.addService(this.api.hap.Service.AccessoryInformation);
@@ -118,7 +120,13 @@ private setupAccessoryServices(accessory: PlatformAccessory, data: TempoContext)
     .setCharacteristic(this.api.hap.Characteristic.ConfiguredName, colorName);
 
   sensorService.getCharacteristic(this.api.hap.Characteristic.ContactSensorState)
-    .onGet(() => this.isCurrentTimeHC() === isHC && this.lastCodeJour === colorCode);
+    .onGet(() => {
+      if (isHC !== null) {
+        return this.isCurrentTimeHC() === isHC && this.lastCodeJour === colorCode;
+      } else {
+        return this.lastCodeJour === colorCode;
+      }
+    });
 
   accessory.context.tempo = data;
 }
@@ -149,32 +157,33 @@ private setupAccessoryServices(accessory: PlatformAccessory, data: TempoContext)
     }
   }
 
-  private updateTempoDayColor(): void {
-    const today = this.getCurrentTempoDate();
-    const currentCodeJour = this.getColorCodeForDate(today);
+private updateTempoDayColor(): void {
+  const today = this.getCurrentTempoDate();
+  const currentCodeJour = this.getColorCodeForDate(today);
 
-    if (this.lastCodeJour !== currentCodeJour) {
-      this.lastCodeJour = currentCodeJour;
+  if (this.lastCodeJour !== currentCodeJour) {
+    this.lastCodeJour = currentCodeJour;
 
-      this.accessories.forEach(accessory => {
-        const tempoContext = accessory.context.tempo as TempoContext;
-        const isActive = tempoContext.colorCode === this.lastCodeJour;
+    this.accessories.forEach(accessory => {
+      const tempoContext = accessory.context.tempo as TempoContext;
+      const isActive = tempoContext.colorCode === this.lastCodeJour;
 
-        const sensorService = accessory.getService(this.api.hap.Service.ContactSensor);
-        if (sensorService) {
-          sensorService
-            .getCharacteristic(this.api.hap.Characteristic.ContactSensorState)
-            .updateValue(isActive);
-        }
+      const sensorService = accessory.getService(this.api.hap.Service.ContactSensor);
+      if (sensorService) {
+        sensorService
+          .getCharacteristic(this.api.hap.Characteristic.ContactSensorState)
+          .updateValue(isActive);
+      }
 
-        this.log.info(`${tempoContext.colorName} est maintenant ${isActive ? 'ACTIVÉ' : 'DÉSACTIVÉ'}`);
-      });
+      this.log.info(`${tempoContext.colorName} est maintenant ${isActive ? 'ACTIVÉ' : 'DÉSACTIVÉ'}`);
+    });
 
-      this.log.info(`[${moment().tz('Europe/Paris').format()}] Tempo day color updated.`);
-    } else {
-      this.log.info('La couleur du jour n\'a pas changé.');
-    }
+    this.log.info(`[${moment().tz('Europe/Paris').format()}] Tempo day color updated.`);
+  } else {
+    this.log.info('La couleur du jour n\'a pas changé.');
   }
+}
+
 
   private getCurrentTempoDate(): string {
     const now = moment().tz('Europe/Paris');
