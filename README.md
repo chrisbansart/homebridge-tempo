@@ -54,14 +54,14 @@ Jour J :
 
 Le lendemain J+1 :
 
-- A 6h (le moment ou la nouvelle couleur et tarification associée s'applique), les détecteurs de contact HomeKit représentant les couleurs des jours s'activent ou se désactivent. Exemple : si le jour devient rouge, les détecteurs "Jours Rouge" et "Jour Rouge HP" s'activent et tous les autres se désactivent.
-- A 22h (le moment du passage en Heures creuses), le détecteur "Jour Rouge" reste activé, le détecteur "Jour Rouge HC" s'active et le détecteur "Jour Rouge HP" se désactive. Exemple : si le jour est rouge, le détecteur « Jour Rouge HC » s'active le détecteur, le détecteur « Jour Rouge HP » se désactive et et le détecteur "Jour Rouge" reste actif.
+- A 6h (le moment où la nouvelle couleur et la tarification associée s'appliquent), les détecteurs de contact HomeKit représentant les couleurs des jours s'activent ou se désactivent. Exemple : si le jour devient rouge, les détecteurs "Jours Rouge" et "Jour Rouge HP" s'activent et tous les autres se désactivent.
+- A 22h (le moment du passage en Heures creuses), le détecteur de la couleur du jour reste active, le détecteur de la "couleur du jour HC" s'active et le détecteur "couleur du jour HP" se désactive. Exemple : si le jour est rouge, le détecteur "Jour Rouge" reste actif, le détecteur « Jour Rouge HC » s'active et le détecteur « Jour Rouge HP » se désactive.
 
 etc.
 
 Cette stratégie de mise à jour des données évite d'avoir à solliciter à intervalles répétés le site Web EDF-RTE inutilement.
 
-NB : au démarrage ou lors d'un redémarrage du plugin, le plugin met à jour immédiatement tous les détecteurs et récupère les données de J+1.
+NB : Au démarrage ou lors d'un redémarrage du plugin, le plugin met à jour immédiatement tous les détecteurs et récupère les données de J+1.
 
 ## Ressources
 
