@@ -5,10 +5,12 @@
   "headerDisplay": "Configurez les jours Tempo et personnalisez les noms des accessoires.",
   "footerDisplay": "Created by @chrisbansart",
   "schema": {
+    "type": "object",
     "properties": {
       "name": {
-        "title": "Tempo",
+        "title": "Nom",
         "type": "string",
+        "default": "Tempo",
         "required": true
       },
       "jourRougeHPEnabled": {
@@ -72,34 +74,124 @@
         "default": "J Bleu HC"
       },
       "jourRougeEnabled": {
-        "title": "Jour Rouge HC ou HP",
+        "title": "Jour Rouge",
         "type": "boolean",
-        "default": "true"
+        "default": true
       },
       "jourRougeName": {
-        "title": "Nom de l'accessoire (Jour Rouge HC ou HP)",
+        "title": "Nom de l'accessoire (Jour Rouge)",
         "type": "string",
-        "default": "J Rouge HC ou HP"
+        "default": "J Rouge"
       },
       "jourBlancEnabled": {
-        "title": "Jour Blanc HC ou HP",
+        "title": "Jour Blanc",
         "type": "boolean",
-        "default": "true"
+        "default": true
       },
       "jourBlancName": {
-        "title": "Nom de l'accessoire (Jour Blanc HC ou HP)",
+        "title": "Nom de l'accessoire (Jour Blanc)",
         "type": "string",
-        "default": "J Blanc HC ou HP"
+        "default": "J Blanc"
       },
       "jourBleuEnabled": {
-        "title": "Jour Bleu HC ou HP",
+        "title": "Jour Bleu",
         "type": "boolean",
-        "default": "true"
+        "default": true
       },
       "jourBleuName": {
-        "title": "Nom de l'accessoire (Jour Bleu HC ou HP)",
+        "title": "Nom de l'accessoire (Jour Bleu)",
         "type": "string",
-        "default": "J Bleu HC ou HP"
+        "default": "J Bleu"
+      },
+      "jourRougeHPJ1Enabled": {
+        "title": "J+1 Rouge HP",
+        "type": "boolean",
+        "default": false
+      },
+      "jourRougeHPJ1Name": {
+        "title": "Nom de l'accessoire (J+1 Rouge HP)",
+        "type": "string",
+        "default": "J+1 Rouge HP"
+      },
+      "jourRougeHCJ1Enabled": {
+        "title": "J+1 Rouge HC",
+        "type": "boolean",
+        "default": false
+      },
+      "jourRougeHCJ1Name": {
+        "title": "Nom de l'accessoire (J+1 Rouge HC)",
+        "type": "string",
+        "default": "J+1 Rouge HC"
+      },
+      "jourBlancHPJ1Enabled": {
+        "title": "J+1 Blanc HP",
+        "type": "boolean",
+        "default": false
+      },
+      "jourBlancHPJ1Name": {
+        "title": "Nom de l'accessoire (J+1 Blanc HP)",
+        "type": "string",
+        "default": "J+1 Blanc HP"
+      },
+      "jourBlancHCJ1Enabled": {
+        "title": "J+1 Blanc HC",
+        "type": "boolean",
+        "default": false
+      },
+      "jourBlancHCJ1Name": {
+        "title": "Nom de l'accessoire (J+1 Blanc HC)",
+        "type": "string",
+        "default": "J+1 Blanc HC"
+      },
+      "jourBleuHPJ1Enabled": {
+        "title": "J+1 Bleu HP",
+        "type": "boolean",
+        "default": false
+      },
+      "jourBleuHPJ1Name": {
+        "title": "Nom de l'accessoire (J+1 Bleu HP)",
+        "type": "string",
+        "default": "J+1 Bleu HP"
+      },
+      "jourBleuHCJ1Enabled": {
+        "title": "J+1 Bleu HC",
+        "type": "boolean",
+        "default": false
+      },
+      "jourBleuHCJ1Name": {
+        "title": "Nom de l'accessoire (J+1 Bleu HC)",
+        "type": "string",
+        "default": "J+1 Bleu HC"
+      },
+      "jourRougeJ1Enabled": {
+        "title": "J+1 Rouge",
+        "type": "boolean",
+        "default": false
+      },
+      "jourRougeJ1Name": {
+        "title": "Nom de l'accessoire (J+1 Rouge)",
+        "type": "string",
+        "default": "J+1 Rouge"
+      },
+      "jourBlancJ1Enabled": {
+        "title": "J+1 Blanc",
+        "type": "boolean",
+        "default": false
+      },
+      "jourBlancJ1Name": {
+        "title": "Nom de l'accessoire (J+1 Blanc)",
+        "type": "string",
+        "default": "J+1 Blanc"
+      },
+      "jourBleuJ1Enabled": {
+        "title": "J+1 Bleu",
+        "type": "boolean",
+        "default": false
+      },
+      "jourBleuJ1Name": {
+        "title": "Nom de l'accessoire (J+1 Bleu)",
+        "type": "string",
+        "default": "J+1 Bleu"
       }
     }
   },
@@ -107,96 +199,182 @@
     {
       "key": "jourRougeHPEnabled",
       "type": "checkbox",
-      "label": "Rendre visible le Jour Rouge HP"
+      "title": "Rendre visible le Jour Rouge HP"
     },
     {
       "key": "jourRougeHPName",
       "type": "string",
-      "label": "Nom de l'accessoire pour le Jour Rouge HP"
+      "title": "Nom de l'accessoire pour le Jour Rouge HP"
     },
     {
       "key": "jourRougeHCEnabled",
       "type": "checkbox",
-      "label": "Rendre visible le Jour Rouge HC"
+      "title": "Rendre visible le Jour Rouge HC"
     },
     {
       "key": "jourRougeHCName",
       "type": "string",
-      "label": "Nom de l'accessoire pour le Jour Rouge HC"
+      "title": "Nom de l'accessoire pour le Jour Rouge HC"
     },
     {
       "key": "jourBlancHPEnabled",
       "type": "checkbox",
-      "label": "Rendre visible le Jour Blanc HP"
+      "title": "Rendre visible le Jour Blanc HP"
     },
     {
       "key": "jourBlancHPName",
       "type": "string",
-      "label": "Nom de l'accessoire pour le Jour Blanc HP"
+      "title": "Nom de l'accessoire pour le Jour Blanc HP"
     },
     {
       "key": "jourBlancHCEnabled",
       "type": "checkbox",
-      "label": "Rendre visible le Jour Blanc HC"
+      "title": "Rendre visible le Jour Blanc HC"
     },
     {
       "key": "jourBlancHCName",
       "type": "string",
-      "label": "Nom de l'accessoire pour le Jour Blanc HC"
+      "title": "Nom de l'accessoire pour le Jour Blanc HC"
     },
     {
       "key": "jourBleuHPEnabled",
       "type": "checkbox",
-      "label": "Rendre visible le Jour Bleu HP"
+      "title": "Rendre visible le Jour Bleu HP"
     },
     {
       "key": "jourBleuHPName",
       "type": "string",
-      "label": "Nom de l'accessoire pour le Jour Bleu HP"
+      "title": "Nom de l'accessoire pour le Jour Bleu HP"
     },
     {
       "key": "jourBleuHCEnabled",
       "type": "checkbox",
-      "label": "Rendre visible le Jour Bleu HC"
+      "title": "Rendre visible le Jour Bleu HC"
     },
     {
       "key": "jourBleuHCName",
       "type": "string",
-      "label": "Nom de l'accessoire pour le Jour Bleu HC"
-    },
-    {
-      "type": "help",
-      "text": "=== Détecteurs pour couleurs des jours sans la distinction HC/HP ==="
+      "title": "Nom de l'accessoire pour le Jour Bleu HC"
     },
     {
       "key": "jourRougeEnabled",
       "type": "checkbox",
-      "label": "Rendre visible le Jour Rouge HC ou HP"
+      "title": "Rendre visible le Jour Rouge"
     },
     {
       "key": "jourRougeName",
       "type": "string",
-      "label": "Nom de l'accessoire pour le Jour Rouge HC ou HP"
+      "title": "Nom de l'accessoire pour le Jour Rouge"
     },
     {
       "key": "jourBlancEnabled",
       "type": "checkbox",
-      "label": "Rendre visible le Jour Blanc HC ou HP"
+      "title": "Rendre visible le Jour Blanc"
     },
     {
       "key": "jourBlancName",
       "type": "string",
-      "label": "Nom de l'accessoire pour le Jour Blanc HC ou HP"
+      "title": "Nom de l'accessoire pour le Jour Blanc"
     },
     {
       "key": "jourBleuEnabled",
       "type": "checkbox",
-      "label": "Rendre visible le Jour Bleu HC ou HP"
+      "title": "Rendre visible le Jour Bleu"
     },
     {
       "key": "jourBleuName",
       "type": "string",
-      "label": "Nom de l'accessoire pour le Jour Bleu HC ou HP"
+      "title": "Nom de l'accessoire pour le Jour Bleu"
+    },
+    {
+      "key": "jourRougeHPJ1Enabled",
+      "type": "checkbox",
+      "title": "Rendre visible le J+1 Rouge HP"
+    },
+    {
+      "key": "jourRougeHPJ1Name",
+      "type": "string",
+      "title": "Nom de l'accessoire pour le J+1 Rouge HP"
+    },
+    {
+      "key": "jourRougeHCJ1Enabled",
+      "type": "checkbox",
+      "title": "Rendre visible le J+1 Rouge HC"
+    },
+    {
+      "key": "jourRougeHCJ1Name",
+      "type": "string",
+      "title": "Nom de l'accessoire pour le J+1 Rouge HC"
+    },
+    {
+      "key": "jourBlancHPJ1Enabled",
+      "type": "checkbox",
+      "title": "Rendre visible le J+1 Blanc HP"
+    },
+    {
+      "key": "jourBlancHPJ1Name",
+      "type": "string",
+      "title": "Nom de l'accessoire pour le J+1 Blanc HP"
+    },
+    {
+      "key": "jourBlancHCJ1Enabled",
+      "type": "checkbox",
+      "title": "Rendre visible le J+1 Blanc HC"
+    },
+    {
+      "key": "jourBlancHCJ1Name",
+      "type": "string",
+      "title": "Nom de l'accessoire pour le J+1 Blanc HC"
+    },
+    {
+      "key": "jourBleuHPJ1Enabled",
+      "type": "checkbox",
+      "title": "Rendre visible le J+1 Bleu HP"
+    },
+    {
+      "key": "jourBleuHPJ1Name",
+      "type": "string",
+      "title": "Nom de l'accessoire pour le J+1 Bleu HP"
+    },
+    {
+      "key": "jourBleuHCJ1Enabled",
+      "type": "checkbox",
+      "title": "Rendre visible le J+1 Bleu HC"
+    },
+    {
+      "key": "jourBleuHCJ1Name",
+      "type": "string",
+      "title": "Nom de l'accessoire pour le J+1 Bleu HC"
+    },
+    {
+      "key": "jourRougeJ1Enabled",
+      "type": "checkbox",
+      "title": "Rendre visible le J+1 Rouge"
+    },
+    {
+      "key": "jourRougeJ1Name",
+      "type": "string",
+      "title": "Nom de l'accessoire pour le J+1 Rouge"
+    },
+    {
+      "key": "jourBlancJ1Enabled",
+      "type": "checkbox",
+      "title": "Rendre visible le J+1 Blanc"
+    },
+    {
+      "key": "jourBlancJ1Name",
+      "type": "string",
+      "title": "Nom de l'accessoire pour le J+1 Blanc"
+    },
+    {
+      "key": "jourBleuJ1Enabled",
+      "type": "checkbox",
+      "title": "Rendre visible le J+1 Bleu"
+    },
+    {
+      "key": "jourBleuJ1Name",
+      "type": "string",
+      "title": "Nom de l'accessoire pour le J+1 Bleu"
     }
   ]
 }
