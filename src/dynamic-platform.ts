@@ -59,13 +59,7 @@ private initializeAccessories(): void {
     { colorCode: 2, colorName: this.config.jourBlancName || 'J Blanc', enabled: this.config.jourBlancEnabled !== false, isHC: null, isJ1: false },
     { colorCode: 1, colorName: this.config.jourBleuName || 'J Bleu', enabled: this.config.jourBleuEnabled !== false, isHC: null, isJ1: false },
     
-    // Contacteurs J+1 (jour suivant)
-    { colorCode: 3, colorName: this.config.jourRougeHPJ1Name || 'J+1 Rouge HP', enabled: this.config.jourRougeHPJ1Enabled === true, isHC: false, isJ1: true },
-    { colorCode: 2, colorName: this.config.jourBlancHPJ1Name || 'J+1 Blanc HP', enabled: this.config.jourBlancHPJ1Enabled === true, isHC: false, isJ1: true },
-    { colorCode: 1, colorName: this.config.jourBleuHPJ1Name || 'J+1 Bleu HP', enabled: this.config.jourBleuHPJ1Enabled === true, isHC: false, isJ1: true },
-    { colorCode: 3, colorName: this.config.jourRougeHCJ1Name || 'J+1 Rouge HC', enabled: this.config.jourRougeHCJ1Enabled === true, isHC: true, isJ1: true },
-    { colorCode: 2, colorName: this.config.jourBlancHCJ1Name || 'J+1 Blanc HC', enabled: this.config.jourBlancHCJ1Enabled === true, isHC: true, isJ1: true },
-    { colorCode: 1, colorName: this.config.jourBleuHCJ1Name || 'J+1 Bleu HC', enabled: this.config.jourBleuHCJ1Enabled === true, isHC: true, isJ1: true },
+    // Contacteurs J+1 (jour suivant) - sans distinction HC/HP
     { colorCode: 3, colorName: this.config.jourRougeJ1Name || 'J+1 Rouge', enabled: this.config.jourRougeJ1Enabled === true, isHC: null, isJ1: true },
     { colorCode: 2, colorName: this.config.jourBlancJ1Name || 'J+1 Blanc', enabled: this.config.jourBlancJ1Enabled === true, isHC: null, isJ1: true },
     { colorCode: 1, colorName: this.config.jourBleuJ1Name || 'J+1 Bleu', enabled: this.config.jourBleuJ1Enabled === true, isHC: null, isJ1: true },
@@ -195,7 +189,14 @@ private updateTempoDayColor(): void {
   this.accessories.forEach(accessory => {
     const tempoContext = accessory.context.tempo as TempoContext;
     const targetCode = tempoContext.isJ1 ? this.lastCodeJourJ1 : this.lastCodeJour;
-    const isActive = tempoContext.colorCode === targetCode;
+
+    // Vérifier si la couleur correspond
+    let isActive = tempoContext.colorCode === targetCode;
+
+    // Pour les contacteurs HC/HP, vérifier aussi la période horaire
+    if (isActive && tempoContext.isHC !== null) {
+      isActive = this.isCurrentTimeHC() === tempoContext.isHC;
+    }
 
     const sensorService = accessory.getService(this.api.hap.Service.ContactSensor);
     if (sensorService) {
