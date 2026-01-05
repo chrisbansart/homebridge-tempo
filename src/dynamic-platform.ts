@@ -152,7 +152,7 @@ private setupAccessoryServices(accessory: PlatformAccessory, data: TempoContext)
     }
   }
 
-  private async updateTempoData(): Promise<void> {
+  private async updateTempoData(): Promise<boolean> {
     try {
       const season = this.getCurrentSeason();
       const response = await axios.get<{ values: { [key: string]: string } }>(
@@ -160,9 +160,10 @@ private setupAccessoryServices(accessory: PlatformAccessory, data: TempoContext)
       );
       this.dataTempo = response.data.values;
       this.log.info(`[${moment().tz('Europe/Paris').format()}] Tempo data updated.`);
+      return true;
     } catch (error) {
       this.log.error(`Erreur de mise à jour des données Tempo : ${error instanceof Error ? error.message : String(error)}`);
-      setTimeout(() => this.updateTempoData(), 1 * 60 * 60 * 1000);
+      return false;
     }
   }
 
@@ -236,20 +237,34 @@ private updateTempoDayColor(): void {
   }
 
 
-  // Mise à jour depuis le site web RTE des couleurs des jours. Ici : 7h du matin
+  // Mise à jour depuis le site web RTE des couleurs des jours. Ici : 7h, 9h, 11h et 13h
   private scheduleTempoDataUpdate(): void {
     const now = moment().tz('Europe/Paris');
-    let nextUpdate = moment().tz('Europe/Paris').startOf('day').add(7, 'hours');
-    
-    if (now.isAfter(nextUpdate)) {
-        this.updateTempoData();
-        nextUpdate = moment().tz('Europe/Paris').startOf('day').add(1, 'days').add(7, 'hours');
+    const updateHours = [7, 9, 11, 13];
+
+    // Trouver la prochaine heure de mise à jour
+    let nextUpdate = null;
+    for (const hour of updateHours) {
+      const candidate = moment().tz('Europe/Paris').startOf('day').add(hour, 'hours');
+      if (now.isBefore(candidate)) {
+        nextUpdate = candidate;
+        break;
+      }
+    }
+
+    // Si toutes les heures sont passées aujourd'hui, prendre la première demain
+    if (!nextUpdate) {
+      nextUpdate = moment().tz('Europe/Paris').startOf('day').add(1, 'days').add(updateHours[0], 'hours');
     }
 
     const timeUntilNextUpdate = nextUpdate.diff(now);
     setTimeout(() => {
-      this.updateTempoData();
-      this.scheduleTempoDataUpdate();
+      this.updateTempoData().then((success) => {
+        if (success) {
+          this.updateTempoDayColor();
+        }
+        this.scheduleTempoDataUpdate();
+      });
     }, timeUntilNextUpdate);
   }
 
