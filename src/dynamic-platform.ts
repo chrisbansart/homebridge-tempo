@@ -4,6 +4,10 @@ import moment from 'moment-timezone';
 
 const PLUGIN_NAME = 'homebridge-tempo';
 const PLATFORM_NAME = 'Tempo';
+const VALID_COLORS = new Set(['BLUE', 'WHITE', 'RED']);
+const RETRY_DELAY_MINUTES = 15; // Nouvel essai si la couleur du jour est inconnue
+const HTTP_TIMEOUT_MS = 30000;
+
 interface TempoContext {
   colorCode: number;
   colorName: string;
@@ -31,13 +35,18 @@ class TempoPlatform implements DynamicPlatformPlugin {
     this.config = config;
     this.api = api;
 
-    this.api.on('didFinishLaunching', () => {
+    this.api.on('didFinishLaunching', async () => {
       this.initializeAccessories();
-      this.updateTempoData().then(() => {
+      let todayKnown = false;
+      try {
+        todayKnown = await this.updateTempoData();
         this.updateTempoDayColor();
-        this.scheduleTempoDataUpdate();
+      } catch (error) {
+        this.log.error(`Erreur au démarrage : ${error instanceof Error ? error.message : String(error)}`);
+      } finally {
+        this.scheduleTempoDataUpdate(!todayKnown);
         this.scheduleTempoDayColorUpdate();
-      });
+      }
     });
   }
 
@@ -152,19 +161,44 @@ private setupAccessoryServices(accessory: PlatformAccessory, data: TempoContext)
     }
   }
 
+  /**
+   * Récupère les couleurs auprès de RTE et les fusionne dans dataTempo.
+   * Les données déjà connues ne sont jamais effacées : une réponse RTE vide,
+   * incomplète ou invalide (cf. issue #8) ne fait donc plus tout désactiver.
+   * Retourne true si la couleur du jour Tempo courant est connue.
+   */
   private async updateTempoData(): Promise<boolean> {
+    const now = moment().tz('Europe/Paris').format();
     try {
       const season = this.getCurrentSeason();
-      const response = await axios.get<{ values: { [key: string]: string } }>(
-        `${this.apiEndpoint}?season=${season}`
+      const response = await axios.get<{ values?: unknown }>(
+        `${this.apiEndpoint}?season=${season}`,
+        { timeout: HTTP_TIMEOUT_MS },
       );
-      this.dataTempo = response.data.values;
-      this.log.info(`[${moment().tz('Europe/Paris').format()}] Tempo data updated.`);
-      return true;
+      const values = response.data?.values;
+
+      if (values && typeof values === 'object') {
+        let count = 0;
+        for (const [date, color] of Object.entries(values as Record<string, unknown>)) {
+          if (typeof color === 'string' && VALID_COLORS.has(color)) {
+            this.dataTempo[date] = color;
+            count++;
+          }
+        }
+        this.log.info(`[${now}] Tempo data updated (${count} jours reçus).`);
+      } else {
+        this.log.warn(`[${now}] Réponse RTE invalide (champ "values" absent), données précédentes conservées.`);
+      }
     } catch (error) {
       this.log.error(`Erreur de mise à jour des données Tempo : ${error instanceof Error ? error.message : String(error)}`);
+    }
+
+    const today = this.getCurrentTempoDate();
+    if (this.getColorCodeForDate(today) === 0) {
+      this.log.warn(`[${now}] Couleur du jour ${today} inconnue, nouvel essai dans ${RETRY_DELAY_MINUTES} min.`);
       return false;
     }
+    return true;
   }
 
 private updateTempoDayColor(): void {
@@ -237,8 +271,9 @@ private updateTempoDayColor(): void {
   }
 
 
-  // Mise à jour depuis le site web RTE des couleurs des jours. Ici : 7h, 9h, 11h et 13h
-  private scheduleTempoDataUpdate(): void {
+  // Mise à jour depuis le site web RTE des couleurs des jours. Ici : 7h, 9h, 11h et 13h.
+  // Si retrySoon, un nouvel essai est fait dans RETRY_DELAY_MINUTES (sans dépasser le prochain créneau).
+  private scheduleTempoDataUpdate(retrySoon = false): void {
     const now = moment().tz('Europe/Paris');
     const updateHours = [7, 9, 11, 13];
 
@@ -257,14 +292,25 @@ private updateTempoDayColor(): void {
       nextUpdate = moment().tz('Europe/Paris').startOf('day').add(1, 'days').add(updateHours[0], 'hours');
     }
 
+    if (retrySoon) {
+      const retryAt = now.clone().add(RETRY_DELAY_MINUTES, 'minutes');
+      if (retryAt.isBefore(nextUpdate)) {
+        nextUpdate = retryAt;
+      }
+    }
+
     const timeUntilNextUpdate = nextUpdate.diff(now);
-    setTimeout(() => {
-      this.updateTempoData().then((success) => {
-        if (success) {
-          this.updateTempoDayColor();
-        }
-        this.scheduleTempoDataUpdate();
-      });
+    setTimeout(async () => {
+      let todayKnown = false;
+      try {
+        todayKnown = await this.updateTempoData();
+        this.updateTempoDayColor();
+      } catch (error) {
+        this.log.error(`Erreur lors de la mise à jour programmée : ${error instanceof Error ? error.message : String(error)}`);
+      } finally {
+        // Toujours reprogrammer, même en cas d'erreur, pour ne jamais arrêter les mises à jour
+        this.scheduleTempoDataUpdate(!todayKnown);
+      }
     }, timeUntilNextUpdate);
   }
 
